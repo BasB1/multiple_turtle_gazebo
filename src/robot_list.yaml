@@ -1,0 +1,16 @@
+1:
+  id: turtle_1 
+  left: /turtle_1_tf/left_tag_link
+  right: /turtle_1_tf/right_tag_link
+2:
+  id: turtle_2 
+  left: /turtle_2_tf/left_tag_link
+  right: /turtle_2_tf/right_tag_link
+3:
+  id: turtle_3 
+  left: /turtle_3_tf/left_tag_link
+  right: /turtle_3_tf/right_tag_link
+4:
+  id: turtle_4 
+  left: /turtle_4_tf/left_tag_link
+  right: /turtle_4_tf/right_tag_link

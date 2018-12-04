@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<launch>
+  <group ns="turtle_1">
+    <arg name="robot_name" value="turtle_1"/>
+    <arg name="map_x" value="50"/>
+    <arg name="map_y" value="50"/>
+    <arg name="tf_prefix" value="$(arg robot_name)_tf"/>
+    <param name="tf_prefix" value="$(arg tf_prefix)"/>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/one_turtle.launch">
+      <arg name="robot_name" value="$(arg robot_name)"/>
+      <arg name="init_x" value="6"/>
+      <arg name="init_y" value="-12"/>
+    </include>
+    
+    <!--include file="$(find multiple_turtle_gazebo)/launch/includes/cartographer.launch">
+      <arg name="robot_name" value="$(arg robot_name)"/>
+    </include-->
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/gmapping.launch">
+      <arg name="map_x" value="$(arg map_x)"/>
+      <arg name="map_y" value="$(arg map_y)"/>
+      <arg name="robot_name" value="$(arg robot_name)"/>
+      <arg name="scan_topic"  default="/turtle_1/scan"/>
+      <arg name="base_frame"  default="/$(arg tf_prefix)/base_footprint"/>
+      <arg name="odom_frame"  default="/$(arg tf_prefix)/odom"/>
+      <arg name="map_frame"  default="/$(arg tf_prefix)/map"/>
+    </include>
+
+    <arg name="map_x_div" value="$(eval arg('map_x') / -2)"/>
+    <arg name="map_y_div" value="$(eval arg('map_y') / -2)"/>
+  </group>
+
+  <include file="$(find multiple_turtle_gazebo)/launch/includes/turtlebot_world.launch"/>
+</launch>

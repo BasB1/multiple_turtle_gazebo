@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<launch>
+  <node pkg="map_server" type="map_saver" name="saver" args="-f /home/bas/catkin_ws/src/x_com_test" output="screen">
+    <remap from="map" to="/turtle_1/map"/>
+  </node>
+</launch>

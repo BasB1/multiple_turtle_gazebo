@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<launch>
+  <arg name="robot_1_name" value="turtle_1"/>
+  <arg name="robot_2_name" value="turtle_2"/>
+  <arg name="robot_3_name" value="turtle_3"/>
+  <arg name="robot_4_name" value="turtle_4"/>
+
+  <arg name="left_tag_x" default="0" />
+  <arg name="left_tag_y" default="0.255" />
+  <arg name="right_tag_x" default="0" />
+  <arg name="right_tag_y" default="-0.255" />
+
+  <arg name="link" default="plate_top_link" />
+
+  <include file="$(find multiple_turtle_gazebo)/launch/includes/turtlebot_world.launch"/>
+
+  <node name="zero_link" pkg="tf" type="static_transform_publisher" args="1 -26 0 0 0 0 world zero 10"/>
+
+  <group ns="$(arg robot_1_name)">
+    <arg name="tf_prefix" value="$(arg robot_1_name)_tf"/>
+    <param name="tf_prefix" value="$(arg tf_prefix)"/>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/one_turtle.launch">
+      <arg name="robot_name" value="$(arg robot_1_name)"/>
+      <arg name="init_x" value="-3"/>
+      <arg name="init_y" value="6"/>
+    </include>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/amcl.launch">
+      <arg name="robot_name"  value="$(arg robot_1_name)"/>
+      <arg name="scan_topic"  value="/$(arg robot_1_name)/scan"/>
+      <arg name="base_frame"  value="/$(arg tf_prefix)/base_footprint"/>
+      <arg name="odom_frame"  value="/$(arg tf_prefix)/odom"/>
+      <arg name="global_frame"   value="/$(arg tf_prefix)/map"/>
+    </include>
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find multiple_turtle_gazebo)/map/x_com_test_1.yaml" >
+      <param name="frame_id"  value="/$(arg tf_prefix)/map"/>
+    </node>
+
+    <node name="left_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg left_tag_x) $(arg left_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/left_tag_link 10"/>
+    <node name="right_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg right_tag_x) $(arg right_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/right_tag_link 10"/>
+    <node name="world_link" pkg="tf" type="static_transform_publisher" args="3 -6 0 0 0 0 world /$(arg tf_prefix)/map 10"/>
+
+    <node pkg="multiple_turtle_gazebo" type="localization.py" name="localization_node" output="screen">
+      <param name="robot_number" value="1"/>
+      <param name="frequency" value="20"/>
+
+      <param name="left_tag_pos_x" value="$(arg left_tag_x)"/>
+      <param name="left_tag_pos_y" value="$(arg left_tag_y)"/>
+      <param name="right_tag_pos_x" value="$(arg right_tag_x)"/>
+      <param name="right_tag_pos_y" value="$(arg right_tag_y)"/>
+      <param name="tf_prefix" value="/$(arg tf_prefix)"/>
+    
+      <param name="loc_dis" value="50"/> 
+      <param name="com_dis" value="4"/> 
+      <param name="link" value="/$(arg link)"/> 
+     
+      <param name="R" value="1"/>
+      <param name="alpha" value="1.038"/>
+      <param name="noise" value="0.00001"/>
+      <param name="protocol" value="1"/>
+
+      <param name="tx_topic" value="odom"/>
+      <param name="rx_topic" value="uwb_rx"/>
+    </node>
+  </group>
+
+  <group ns="$(arg robot_2_name)">
+    <arg name="tf_prefix" value="$(arg robot_2_name)_tf"/>
+    <param name="tf_prefix" value="$(arg tf_prefix)"/>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/one_turtle.launch">
+      <arg name="robot_name" value="$(arg robot_2_name)"/>
+      <arg name="init_x" value="2"/>
+      <arg name="init_y" value="6"/>
+    </include>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/amcl.launch">
+      <arg name="robot_name"  value="$(arg robot_2_name)"/>
+      <arg name="scan_topic"  value="/$(arg robot_2_name)/scan"/>
+      <arg name="base_frame"  value="/$(arg tf_prefix)/base_footprint"/>
+      <arg name="odom_frame"  value="/$(arg tf_prefix)/odom"/>
+      <arg name="global_frame"   value="/$(arg tf_prefix)/map"/>
+    </include>
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find multiple_turtle_gazebo)/map/x_com_test_2.yaml" >
+      <param name="frame_id"  value="/$(arg tf_prefix)/map"/>
+    </node>
+
+    <node name="left_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg left_tag_x) $(arg left_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/left_tag_link 10"/>
+    <node name="right_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg right_tag_x) $(arg right_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/right_tag_link 10"/>
+    <node name="world_link" pkg="tf" type="static_transform_publisher" args="8 -6 0 0 0 0 world /$(arg tf_prefix)/map 10"/>
+  </group>
+
+  <group ns="$(arg robot_3_name)">
+    <arg name="tf_prefix" value="$(arg robot_3_name)_tf"/>
+    <param name="tf_prefix" value="$(arg tf_prefix)"/>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/one_turtle.launch">
+      <arg name="robot_name" value="$(arg robot_3_name)"/>
+      <arg name="init_x" value="-3"/>
+      <arg name="init_y" value="0"/>
+    </include>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/amcl.launch">
+      <arg name="robot_name"  value="$(arg robot_3_name)"/>
+      <arg name="scan_topic"  value="/$(arg robot_3_name)/scan"/>
+      <arg name="base_frame"  value="/$(arg tf_prefix)/base_footprint"/>
+      <arg name="odom_frame"  value="/$(arg tf_prefix)/odom"/>
+      <arg name="global_frame"   value="/$(arg tf_prefix)/map"/>
+    </include>
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find multiple_turtle_gazebo)/map/x_com_test_3.yaml" >
+      <param name="frame_id"  value="/$(arg tf_prefix)/map"/>
+    </node>
+
+    <node name="left_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg left_tag_x) $(arg left_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/left_tag_link 10"/>
+    <node name="right_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg right_tag_x) $(arg right_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/right_tag_link 10"/>
+    <node name="world_link" pkg="tf" type="static_transform_publisher" args="3 -12 0 0 0 0 world /$(arg tf_prefix)/map 10"/>
+  </group>
+
+  <group ns="$(arg robot_4_name)">
+    <arg name="tf_prefix" value="$(arg robot_4_name)_tf"/>
+    <param name="tf_prefix" value="$(arg tf_prefix)"/>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/one_turtle.launch">
+      <arg name="robot_name" value="$(arg robot_4_name)"/>
+      <arg name="init_x" value="2"/>
+      <arg name="init_y" value="0"/>
+    </include>
+
+    <include file="$(find multiple_turtle_gazebo)/launch/includes/amcl.launch">
+      <arg name="robot_name"  value="$(arg robot_4_name)"/>
+      <arg name="scan_topic"  value="/$(arg robot_4_name)/scan"/>
+      <arg name="base_frame"  value="/$(arg tf_prefix)/base_footprint"/>
+      <arg name="odom_frame"  value="/$(arg tf_prefix)/odom"/>
+      <arg name="global_frame"   value="/$(arg tf_prefix)/map"/>
+    </include>
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find multiple_turtle_gazebo)/map/x_com_test_4.yaml" >
+      <param name="frame_id"  value="/$(arg tf_prefix)/map"/>
+    </node>
+
+    <node name="left_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg left_tag_x) $(arg left_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/left_tag_link 10"/>
+    <node name="right_tag_link" pkg="tf" type="static_transform_publisher" args="$(arg right_tag_x) $(arg right_tag_y) 0 0 0 0 /$(arg tf_prefix)/$(arg link) /$(arg tf_prefix)/right_tag_link 10"/>
+    <node name="world_link" pkg="tf" type="static_transform_publisher" args="8 -12 0 0 0 0 world /$(arg tf_prefix)/map 10"/>
+  </group>
+</launch>
